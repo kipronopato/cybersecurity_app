@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CyberGuard AI - Advanced Threat Detection System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .sidebar {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            min-height: 100vh;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 280px;
+            z-index: 1000;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            padding: 20px;
+        }
+        
+        .nav-link {
+            color: #495057;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 5px 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary-gradient);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .hero-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .feature-card {
+            background: rgba(255,255,255,0.95);
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .feature-header {
+            padding: 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .feature-card:hover .feature-header::before {
+            left: 100%;
+        }
+        
+        .simulation-header {
+            background: var(--success-gradient);
+        }
+        
+        .scenarios-header {
+            background: var(--secondary-gradient);
+        }
+        
+        .manual-header {
+            background: var(--dark-gradient);
+        }
+        
+        .btn-action {
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .scenario-card {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .scenario-card:hover {
+            border-color: #667eea;
+            transform: scale(1.02);
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .sliding-images {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        
+        .slide.active {
+            opacity: 1;
+        }
+        
+        .slide1 { background: linear-gradient(45deg, #667eea, #764ba2), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="white" stroke-width="2" opacity="0.3"/></svg>'); }
+        .slide2 { background: linear-gradient(45deg, #f093fb, #f5576c), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="20" y="20" width="60" height="60" fill="none" stroke="white" stroke-width="2" opacity="0.3"/></svg>'); }
+        .slide3 { background: linear-gradient(45deg, #4facfe, #00f2fe), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="none" stroke="white" stroke-width="2" opacity="0.3"/></svg>'); }
+        
+        .stats-counter {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        /* Feature Cards */
+        .feature-cards-section {
+            margin-top: 40px;
+        }
+        
+        .feature-card-modern {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            height: 100%;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .feature-card-modern:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .feature-card-modern h5 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .feature-card-modern p {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        
+        /* Threat Feed */
+        .threat-feed-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h3 {
+            color: #2c3e50;
+            margin: 0;
+        }
+        
+        .threat-feed-table {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .table-dark {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+        }
+        
+        .severity-critical { color: #e74c3c; font-weight: bold; }
+        .severity-high { color: #f39c12; font-weight: bold; }
+        .severity-medium { color: #f1c40f; font-weight: bold; }
+        .severity-low { color: #27ae60; font-weight: bold; }
+        
+        /* Performance Cards */
+        .performance-section {
+            color: #2c3e50;
+        }
+        
+        .performance-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .performance-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .performance-icon {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .performance-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .performance-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        
+        .sparkline {
+            height: 30px;
+            margin-top: 10px;
+        }
+        
+        /* Chart Cards */
+        .chart-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            height: 100%;
+        }
+        
+        .chart-card h5 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        /* Timeline */
+        .timeline-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .timeline-section h3 {
+            color: #2c3e50;
+        }
+        
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 60px;
+            left: 12.5%;
+            right: 12.5%;
+            height: 2px;
+            background: var(--primary-gradient);
+            z-index: 1;
+        }
+        
+        .timeline-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .timeline-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .timeline-content h5 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .timeline-content p {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        /* Background Enhancements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .timeline {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .timeline::before {
+                display: none;
+            }
+            .feature-card-modern {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="p-4">
+            <div class="text-center mb-4">
+                <i class="fas fa-shield-alt fa-3x text-primary mb-2"></i>
+                <h4 class="fw-bold">CyberGuard AI</h4>
+                <p class="text-muted small">Advanced Threat Detection</p>
+            </div>
+            
+            <!-- Sliding Images -->
+            <div class="sliding-images">
+                <div class="slide slide1 active"></div>
+                <div class="slide slide2"></div>
+                <div class="slide slide3"></div>
+            </div>
+            
+            <nav class="nav flex-column">
+                <a class="nav-link active" href="#home" onclick="showSection('home')">
+                    <i class="fas fa-home me-2"></i>Home
+                </a>
+                <a class="nav-link" href="#simulation" onclick="showSection('simulation')">
+                    <i class="fas fa-magic me-2"></i>Auto Simulation
+                </a>
+                <a class="nav-link" href="#scenarios" onclick="showSection('scenarios')">
+                    <i class="fas fa-list me-2"></i>Scenarios
+                </a>
+                <a class="nav-link" href="#manual" onclick="showSection('manual')">
+                    <i class="fas fa-keyboard me-2"></i>Manual Analysis
+                </a>
+                <hr>
+                <a class="nav-link" href="/dashboard/">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                </a>
+                {% if user.is_staff %}
+                <a class="nav-link" href="{% url 'admin_maintenance' %}">
+                    <i class="fas fa-tools me-2"></i>Maintenance
+                </a>
+                {% endif %}
+                <a class="nav-link" href="{% url 'logout' %}">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </nav>
+            
+            <!-- Stats -->
+            <div class="mt-4 p-3 bg-light rounded">
+                <h6 class="fw-bold mb-3">System Stats</h6>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Threats Detected:</span>
+                    <span class="stats-counter" id="threats-count">0</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Accuracy:</span>
+                    <span class="text-success fw-bold">98.7%</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Status:</span>
+                    <span class="badge bg-success">Online</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Home Section -->
+        <div id="home-section" class="content-section">
+            <!-- Hero Section -->
+            <div class="hero-section animate__animated animate__fadeInUp">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="display-4 fw-bold mb-4">
+                            <i class="fas fa-shield-alt text-primary me-3"></i>
+                            CyberGuard AI
+                        </h1>
+                        <p class="lead mb-4">
+                            Advanced AI-powered cybersecurity system that detects and analyzes network threats in real-time. 
+                            Protect your infrastructure with machine learning-based threat detection.
+                        </p>
+                        <div class="row mb-4">
+                            <div class="col-md-4 text-center">
+                                <i class="fas fa-brain fa-2x text-primary mb-2"></i>
+                                <h5>AI-Powered</h5>
+                                <p class="small text-muted">Machine learning algorithms for accurate threat detection</p>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <i class="fas fa-clock fa-2x text-success mb-2"></i>
+                                <h5>Real-Time</h5>
+                                <p class="small text-muted">Instant analysis and immediate threat response</p>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <i class="fas fa-chart-line fa-2x text-info mb-2"></i>
+                                <h5>Analytics</h5>
+                                <p class="small text-muted">Comprehensive reporting and threat intelligence</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-action me-3" onclick="showSection('simulation')">
+                            <i class="fas fa-play me-2"></i>Start Analysis
+                        </button>
+                        <button class="btn btn-outline-primary btn-action" onclick="window.open('/dashboard/', '_blank')">
+                            <i class="fas fa-chart-bar me-2"></i>View Dashboard
+                        </button>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <i class="fas fa-network-wired fa-10x text-primary opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature Cards Section -->
+            <div class="feature-cards-section mb-5">
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="feature-card-modern" onclick="showSection('simulation')">
+                            <div class="feature-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h5>AI Threat Detection</h5>
+                            <p>Advanced machine learning algorithms detect and classify threats in real-time</p>
+                            <button class="btn btn-sm btn-outline-primary">Explore</button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="feature-card-modern" onclick="window.open('/dashboard/', '_blank')">
+                            <div class="feature-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <h5>Real-Time Monitoring</h5>
+                            <p>Continuous network surveillance with instant threat alerts and notifications</p>
+                            <button class="btn btn-sm btn-outline-primary">Monitor</button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="feature-card-modern" onclick="window.open('/security/alerts/', '_blank')">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <h5>Threat Analytics</h5>
+                            <p>Comprehensive analysis and reporting of security incidents and patterns</p>
+                            <button class="btn btn-sm btn-outline-primary">Analyze</button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="feature-card-modern" onclick="window.open('/firewall/', '_blank')">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-virus"></i>
+                            </div>
+                            <h5>Firewall Automation</h5>
+                            <p>Automated IP blocking and traffic filtering based on threat intelligence</p>
+                            <button class="btn btn-sm btn-outline-primary">Configure</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Threat Feed -->
+            <div class="threat-feed-section mb-5">
+                <div class="section-header">
+                    <h3><i class="fas fa-satellite-dish me-2"></i>Live Threat Feed</h3>
+                    <span class="badge bg-success">Live</span>
+                </div>
+                <div class="threat-feed-table">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th>Threat Type</th>
+                                <th>Source IP</th>
+                                <th>Severity</th>
+                                <th>Timestamp</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="threat-feed-body">
+                            <!-- Dynamic content will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- System Performance Summary -->
+            <div class="performance-section mb-5">
+                <h3 class="mb-4"><i class="fas fa-tachometer-alt me-2"></i>System Performance Summary</h3>
+                <div class="row g-3">
+                    <div class="col-md-2">
+                        <div class="performance-card">
+                            <div class="performance-icon">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <div class="performance-value">98.7%</div>
+                            <div class="performance-label">Detection Accuracy</div>
+                            <div class="sparkline" id="accuracy-chart"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="performance-card">
+                            <div class="performance-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="performance-value" id="threats-today">0</div>
+                            <div class="performance-label">Threats Today</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="performance-card">
+                            <div class="performance-icon">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                            <div class="performance-value" id="cpu-usage">0%</div>
+                            <div class="performance-label">CPU Usage</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="performance-card">
+                            <div class="performance-icon">
+                                <i class="fas fa-memory"></i>
+                            </div>
+                            <div class="performance-value" id="memory-usage">0%</div>
+                            <div class="performance-label">Memory Usage</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="performance-card">
+                            <div class="performance-icon">
+                                <i class="fas fa-network-wired"></i>
+                            </div>
+                            <div class="performance-value" id="packets-analyzed">0</div>
+                            <div class="performance-label">Packets Analyzed</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- How It Works Timeline -->
+            <div class="timeline-section">
+                <h3 class="text-center mb-5"><i class="fas fa-cogs me-2"></i>How It Works</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-icon">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h5>Capture Traffic</h5>
+                            <p>Monitor and capture network traffic in real-time across all endpoints</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h5>AI Analysis</h5>
+                            <p>Apply machine learning algorithms to analyze traffic patterns and behaviors</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h5>Threat Detection</h5>
+                            <p>Identify and classify potential threats with high accuracy and confidence</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h5>Report Generation</h5>
+                            <p>Generate detailed reports and take automated response actions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Simulation Section -->
+        <div id="simulation-section" class="content-section" style="display: none;">
+            <div class="feature-card animate__animated animate__fadeInUp">
+                <div class="feature-header simulation-header">
+                    <h3><i class="fas fa-magic me-2"></i>Automatic Traffic Simulation</h3>
+                    <p class="mb-0">Generate realistic network traffic data automatically for instant analysis</p>
+                </div>
+                <div class="card-body p-4">
+                    {% if error_message %}
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Error:</strong> {{ error_message }}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="row text-center">
+                        <div class="col-md-4 mb-3">
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="simulate" value="true">
+                                <input type="hidden" name="simulation_type" value="benign">
+                                <button type="submit" class="btn btn-success btn-action w-100">
+                                    <i class="fas fa-shield-check me-2"></i>Simulate Benign Traffic
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="simulate" value="true">
+                                <input type="hidden" name="simulation_type" value="ddos">
+                                <button type="submit" class="btn btn-danger btn-action w-100">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>Simulate DDoS Attack
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="simulate" value="true">
+                                <input type="hidden" name="simulation_type" value="random">
+                                <button type="submit" class="btn btn-warning btn-action w-100">
+                                    <i class="fas fa-random me-2"></i>Random Simulation
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scenarios Section -->
+        <div id="scenarios-section" class="content-section" style="display: none;">
+            <div class="feature-card animate__animated animate__fadeInUp">
+                <div class="feature-header scenarios-header">
+                    <h3><i class="fas fa-list me-2"></i>Predefined Traffic Scenarios</h3>
+                    <p class="mb-0">Select from realistic network traffic scenarios for comprehensive testing</p>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        {% for key, scenario in scenarios.items %}
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="scenario-card card h-100">
+                                    <div class="card-body">
+                                        <h6 class="card-title fw-bold">{{ scenario.name }}</h6>
+                                        <p class="card-text small text-muted">{{ scenario.description }}</p>
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="scenario" value="{{ key }}">
+                                            <button type="submit" class="btn btn-outline-primary btn-sm w-100">
+                                                <i class="fas fa-play me-1"></i>Analyze Scenario
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Manual Section -->
+        <div id="manual-section" class="content-section" style="display: none;">
+            <div class="feature-card animate__animated animate__fadeInUp">
+                <div class="feature-header manual-header">
+                    <h3><i class="fas fa-keyboard me-2"></i>Manual Traffic Analysis</h3>
+                    <p class="mb-0">Enter specific network traffic parameters for custom analysis</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            {% for field in form %}
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ field.id_for_label }}" class="form-label fw-bold">
+                                        <i class="fas fa-chart-line me-1 text-primary"></i>{{ field.label }}
+                                    </label>
+                                    {{ field }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-action">
+                                <i class="fas fa-search me-2"></i>Analyze Traffic & Predict Threat
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sliding images animation
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+        
+        setInterval(nextSlide, 3000);
+        
+        // Section navigation
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName + '-section').style.display = 'block';
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`[href="#${sectionName}"]`).classList.add('active');
+        }
+        
+        // Animate counter
+        function animateCounter() {
+            const counter = document.getElementById('threats-count');
+            let count = 0;
+            const target = Math.floor(Math.random() * 1000) + 500;
+            const increment = target / 100;
+            
+            const timer = setInterval(() => {
+                count += increment;
+                counter.textContent = Math.floor(count);
+                if (count >= target) {
+                    counter.textContent = target;
+                    clearInterval(timer);
+                }
+            }, 20);
+        }
+        
+        // Mock threat data
+        const mockThreats = [
+            { type: 'DDoS Attack', ip: '192.168.1.100', severity: 'Critical', status: 'Blocked' },
+            { type: 'SQL Injection', ip: '10.0.0.45', severity: 'High', status: 'Investigating' },
+            { type: 'Brute Force', ip: '172.16.0.23', severity: 'Medium', status: 'Monitoring' },
+            { type: 'Port Scan', ip: '203.0.113.5', severity: 'Low', status: 'Logged' },
+            { type: 'Malware', ip: '198.51.100.8', severity: 'Critical', status: 'Quarantined' },
+            { type: 'Phishing', ip: '203.0.113.12', severity: 'High', status: 'Blocked' }
+        ];
+        
+        // Update threat feed
+        function updateThreatFeed() {
+            const tbody = document.getElementById('threat-feed-body');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            // Shuffle and take 5 random threats
+            const shuffled = [...mockThreats].sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 5);
+            
+            selected.forEach(threat => {
+                const row = document.createElement('tr');
+                const timestamp = new Date(Date.now() - Math.random() * 3600000).toLocaleTimeString();
+                
+                row.innerHTML = `
+                    <td><i class="fas fa-exclamation-triangle me-2"></i>${threat.type}</td>
+                    <td><code>${threat.ip}</code></td>
+                    <td><span class="severity-${threat.severity.toLowerCase()}">${threat.severity}</span></td>
+                    <td>${timestamp}</td>
+                    <td><span class="badge bg-${threat.status === 'Blocked' ? 'danger' : threat.status === 'Investigating' ? 'warning' : 'success'}">${threat.status}</span></td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Update performance metrics
+        function updatePerformanceMetrics() {
+            const threatsToday = document.getElementById('threats-today');
+            const cpuUsage = document.getElementById('cpu-usage');
+            const memoryUsage = document.getElementById('memory-usage');
+            const packetsAnalyzed = document.getElementById('packets-analyzed');
+            
+            if (threatsToday) threatsToday.textContent = Math.floor(Math.random() * 50) + 10;
+            if (cpuUsage) cpuUsage.textContent = (Math.random() * 30 + 20).toFixed(1) + '%';
+            if (memoryUsage) memoryUsage.textContent = (Math.random() * 40 + 30).toFixed(1) + '%';
+            if (packetsAnalyzed) packetsAnalyzed.textContent = (Math.random() * 1000000 + 500000).toLocaleString();
+        }
+        
+
+        
+        // Auto-refresh functions
+        function startAutoRefresh() {
+            updateThreatFeed();
+            updatePerformanceMetrics();
+            
+            // Refresh every 5 seconds
+            setInterval(() => {
+                updateThreatFeed();
+                updatePerformanceMetrics();
+            }, 5000);
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            animateCounter();
+            startAutoRefresh();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+{% extends 'cyberattack/base.html' %}
+
+{% block title %}Mitigation Guide - {{ attack.attack_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>🛡️ Attack Mitigation Guide</h2>
+                <a href="/dashboard/" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+            
+            <!-- Attack Details -->
+            <div class="card mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5><i class="fas fa-exclamation-triangle me-2"></i>{{ insights.title }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Attack Type:</strong> {{ attack.attack_name }}</p>
+                            <p><strong>Severity:</strong> 
+                                <span class="badge 
+                                    {% if attack.severity == 'Critical' %}bg-danger
+                                    {% elif attack.severity == 'High' %}bg-warning
+                                    {% elif attack.severity == 'Medium' %}bg-info
+                                    {% else %}bg-success{% endif %}">
+                                    {{ attack.severity }}
+                                </span>
+                            </p>
+                            <p><strong>Confidence:</strong> {{ attack.confidence_score|floatformat:1 }}%</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Source IP:</strong> <code>{{ attack.source_ip|default:"Unknown" }}</code></p>
+                            <p><strong>Detected At:</strong> {{ attack.timestamp|date:"M d, Y H:i T" }}</p>
+                            <p><strong>Status:</strong> 
+                                <span class="badge 
+                                    {% if attack.status == 'resolved' %}bg-success
+                                    {% elif attack.status == 'investigating' %}bg-warning
+                                    {% else %}bg-info{% endif %}">
+                                    {{ attack.get_status_display }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning mt-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        {{ insights.description }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Immediate Actions -->
+            <div class="card mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5><i class="fas fa-bolt me-2"></i>Immediate Actions Required</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for action in insights.immediate_actions %}
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-exclamation-circle text-danger me-3 mt-1"></i>
+                                <span>{{ action }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical Details -->
+            {% if insights.technical_details %}
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5><i class="fas fa-chart-line me-2"></i>Technical Analysis</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for key, value in insights.technical_details.items %}
+                        <div class="col-md-4 mb-2">
+                            <strong>{{ key }}:</strong> {{ value }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Mitigation Strategies -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-white">
+                    <h5><i class="fas fa-shield-alt me-2"></i>Mitigation Strategies</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for strategy in insights.mitigation_strategies %}
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-check-circle text-success me-3 mt-1"></i>
+                                <span>{{ strategy }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Long-term Solutions -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5><i class="fas fa-cogs me-2"></i>Long-term Security Solutions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for solution in insights.long_term_solutions %}
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-lightbulb text-warning me-3 mt-1"></i>
+                                <span>{{ solution }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="text-center">
+                <a href="{% url 'attack_detail' attack.id %}" class="btn btn-primary me-3">
+                    <i class="fas fa-eye me-2"></i>View Full Attack Details
+                </a>
+                <a href="/dashboard/attacks/" class="btn btn-info me-3">
+                    <i class="fas fa-list me-2"></i>View All Attacks
+                </a>
+                <a href="/security/blocked-attacks/" class="btn btn-warning">
+                    <i class="fas fa-ban me-2"></i>View Blocked Attacks
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

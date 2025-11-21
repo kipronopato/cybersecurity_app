@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>System Maintenance - CyberGuard AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .maintenance-container {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 60px 40px;
+            text-align: center;
+            max-width: 600px;
+        }
+        .maintenance-icon {
+            font-size: 6rem;
+            color: #ffc107;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .maintenance-title {
+            color: #495057;
+            margin-bottom: 20px;
+        }
+        .maintenance-message {
+            color: #6c757d;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        .btn-admin {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .btn-admin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        .maintenance-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="maintenance-container">
+        <i class="fas fa-tools maintenance-icon"></i>
+        
+        <h1 class="maintenance-title">System Under Maintenance</h1>
+        
+        <p class="maintenance-message">
+            {{ maintenance.maintenance_message }}
+        </p>
+        
+        <div class="maintenance-info">
+            <h5><i class="fas fa-clock me-2"></i>Maintenance Details</h5>
+            {% if maintenance.maintenance_start %}
+                <p><strong>Started:</strong> {{ maintenance.maintenance_start|date:"Y-m-d H:i:s" }}</p>
+            {% endif %}
+            {% if maintenance.maintenance_end %}
+                <p><strong>Expected End:</strong> {{ maintenance.maintenance_end|date:"Y-m-d H:i:s" }}</p>
+            {% endif %}
+            <p class="text-muted mb-0">
+                <i class="fas fa-info-circle me-1"></i>
+                We apologize for any inconvenience. Please check back later.
+            </p>
+        </div>
+        
+        <div class="mt-4">
+            <a href="{% url 'login' %}" class="btn-admin">
+                <i class="fas fa-user-shield me-2"></i>Admin Access
+            </a>
+        </div>
+        
+        <div class="mt-4">
+            <small class="text-muted">
+                <i class="fas fa-refresh me-1"></i>
+                <a href="javascript:location.reload()" class="text-decoration-none">Refresh Page</a>
+            </small>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto-refresh every 30 seconds
+        setTimeout(function() {
+            location.reload();
+        }, 30000);
+    </script>
+</body>
+</html>

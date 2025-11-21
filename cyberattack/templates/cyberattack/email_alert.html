@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Security Alert</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; }
+        .alert-info { background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; padding: 15px; margin: 15px 0; }
+        .severity-critical { background: #f8d7da; border-color: #f5c6cb; }
+        .severity-high { background: #fff3cd; border-color: #ffeaa7; }
+        .severity-medium { background: #d1ecf1; border-color: #bee5eb; }
+        .severity-low { background: #d4edda; border-color: #c3e6cb; }
+        .feature-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .feature-table th, .feature-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .feature-table th { background-color: #f2f2f2; }
+        .footer { background: #f8f9fa; padding: 15px; text-align: center; font-size: 12px; color: #666; }
+        .btn { display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; margin: 10px 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚨 SECURITY ALERT</h1>
+            <h2>{{ attack_log.attack_name }} Detected</h2>
+        </div>
+        
+        <div class="content">
+            <div class="alert-info severity-{{ attack_log.severity|lower }}">
+                <h3>Alert Summary</h3>
+                <p><strong>Attack Type:</strong> {{ attack_log.attack_name }}</p>
+                <p><strong>Severity:</strong> {{ attack_log.severity }}</p>
+                <p><strong>Confidence:</strong> {{ attack_log.confidence_score|floatformat:1 }}%</p>
+                <p><strong>Detection Time:</strong> {{ attack_log.timestamp }}</p>
+                <p><strong>Source IP:</strong> {{ attack_log.source_ip|default:"Unknown" }}</p>
+                <p><strong>Scenario:</strong> {{ attack_log.scenario_name }}</p>
+            </div>
+            
+            <h3>Network Traffic Features</h3>
+            <table class="feature-table">
+                <tr><th>Feature</th><th>Value</th></tr>
+                <tr><td>Destination Port</td><td>{{ attack_log.destination_port }}</td></tr>
+                <tr><td>Flow IAT Min</td><td>{{ attack_log.flow_iat_min|floatformat:2 }}</td></tr>
+                <tr><td>Flow Duration</td><td>{{ attack_log.flow_duration|floatformat:2 }}</td></tr>
+                <tr><td>Flow Bytes/s</td><td>{{ attack_log.flow_bytes_s|floatformat:2 }}</td></tr>
+                <tr><td>Flow Packets/s</td><td>{{ attack_log.flow_packets_s|floatformat:2 }}</td></tr>
+                <tr><td>Total Fwd Packets</td><td>{{ attack_log.total_length_of_fwd_packets|floatformat:2 }}</td></tr>
+                <tr><td>Bwd Packets/s</td><td>{{ attack_log.bwd_packets_s|floatformat:2 }}</td></tr>
+                <tr><td>FIN Flag Count</td><td>{{ attack_log.fin_flag_count }}</td></tr>
+            </table>
+            
+            {% if attack_log.user_agent %}
+            <h3>Additional Information</h3>
+            <p><strong>User Agent:</strong> {{ attack_log.user_agent|truncatechars:100 }}</p>
+            {% endif %}
+            
+            {% if attack_log.request_path %}
+            <p><strong>Request Path:</strong> {{ attack_log.request_path }}</p>
+            {% endif %}
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <a href="#" class="btn">View Dashboard</a>
+                <a href="#" class="btn" style="background: #28a745;">Investigate</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated security alert from your Cybersecurity Monitoring System.</p>
+            <p>Please investigate this incident immediately and take appropriate action.</p>
+            <p>Generated at {{ attack_log.timestamp }}</p>
+        </div>
+    </div>
+</body>
+</html>

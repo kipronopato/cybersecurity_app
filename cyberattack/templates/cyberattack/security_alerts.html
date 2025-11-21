@@ -1,0 +1,171 @@
+{% extends 'cyberattack/base.html' %}
+
+{% block title %}Security Alerts - Cybersecurity Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">🚨 Security Alerts Dashboard</h2>
+            
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <h5>Total Alerts</h5>
+                            <h3>{{ stats.total_alerts }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body">
+                            <h5>Unresolved</h5>
+                            <h3>{{ stats.unresolved_alerts }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <h5>Today</h5>
+                            <h3>{{ stats.today_alerts }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-danger text-white">
+                        <div class="card-body">
+                            <h5>Critical</h5>
+                            <h3>{{ stats.critical_alerts }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <label for="severity" class="form-label">Severity</label>
+                            <select name="severity" id="severity" class="form-select">
+                                <option value="">All Severities</option>
+                                <option value="Critical" {% if severity_filter == 'Critical' %}selected{% endif %}>Critical</option>
+                                <option value="High" {% if severity_filter == 'High' %}selected{% endif %}>High</option>
+                                <option value="Medium" {% if severity_filter == 'Medium' %}selected{% endif %}>Medium</option>
+                                <option value="Low" {% if severity_filter == 'Low' %}selected{% endif %}>Low</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="status" class="form-label">Status</label>
+                            <select name="status" id="status" class="form-select">
+                                <option value="">All Statuses</option>
+                                <option value="unresolved" {% if status_filter == 'unresolved' %}selected{% endif %}>Unresolved</option>
+                                <option value="resolved" {% if status_filter == 'resolved' %}selected{% endif %}>Resolved</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">&nbsp;</label>
+                            <div>
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                                <a href="{% url 'security_alerts_tracking' %}" class="btn btn-secondary">Clear</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Security Alerts Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Security Alerts ({{ page_obj.paginator.count }} total)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Alert Type</th>
+                                    <th>Severity</th>
+                                    <th>Source IP</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for alert in page_obj %}
+                                <tr>
+                                    <td><strong>{{ alert.alert_type }}</strong></td>
+                                    <td>
+                                        <span class="badge 
+                                            {% if alert.severity == 'Critical' %}bg-danger
+                                            {% elif alert.severity == 'High' %}bg-warning
+                                            {% elif alert.severity == 'Medium' %}bg-info
+                                            {% else %}bg-success{% endif %}">
+                                            {{ alert.severity }}
+                                        </span>
+                                    </td>
+                                    <td><code>{{ alert.source_ip|default:"N/A" }}</code></td>
+                                    <td>
+                                        {% if alert.is_resolved %}
+                                            <span class="badge bg-success">Resolved</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">Unresolved</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ alert.created_at|date:"M d, Y H:i T" }}</td>
+                                    <td>
+                                        <small>{{ alert.description|truncatewords:15 }}</small>
+                                        {% if alert.metadata %}
+                                            <br><small class="text-muted">{{ alert.metadata|truncatewords:10 }}</small>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">No security alerts found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if page_obj.has_other_pages %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if severity_filter %}&severity={{ severity_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">Previous</a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ num }}{% if severity_filter %}&severity={{ severity_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if severity_filter %}&severity={{ severity_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">Next</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

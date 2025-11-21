@@ -1,0 +1,54 @@
+Attack logged: BENIGN from 127.0.0.1
+Attack logged: BENIGN from 127.0.0.1
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Real-time monitoring started
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Attack logged: BENIGN from 127.0.0.1
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Attack logged: BENIGN from 127.0.0.1
+Attack logged: BENIGN from 127.0.0.1
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Attack logged: BENIGN from 127.0.0.1
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Error logging attack: 'NoneType' object has no attribute 'monitoring_enabled'
+Attack logged: Infiltration from 127.0.0.1
+Attack logged: Web Attack – Brute Force from 127.0.0.1
+Attack logged: Web Attack – Brute Force from 127.0.0.1
+Attack logged: DDoS from 127.0.0.1
+Attack logged: DDoS from 127.0.0.1
+Attack logged: DoS Slowloris from 127.0.0.1
+Attack logged: Web Attack – XSS from 127.0.0.1
+Attack logged: Web Attack – XSS from 127.0.0.1
+Email alert sent for DoS Hulk attack
+Attack logged: DoS Hulk from 127.0.0.1
+Email alert sent for Web Attack – XSS attack
+Attack logged: Web Attack – XSS from 127.0.0.1
+Email alert sent for Web Attack – SQL Injection attack
+Attack logged: Web Attack – SQL Injection from 127.0.0.1
+Error logging attack: no such table: cyberattack_attacklog
+Error logging attack: no such table: cyberattack_attacklog
