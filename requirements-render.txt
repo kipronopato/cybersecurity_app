@@ -1,5 +1,3 @@
-# Ultra-minimal requirements for Render deployment
-
 # Django Framework
 Django==4.2.15
 
