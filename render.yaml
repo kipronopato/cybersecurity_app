@@ -2,17 +2,35 @@ services:
   - type: web
     name: cyberguard-ai
     env: python
-    buildCommand: "./build-simple.sh"
-    startCommand: "gunicorn cybersecurity.wsgi:application --bind 0.0.0.0:$PORT --env DJANGO_SETTINGS_MODULE=cybersecurity.settings_production"
+
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate --noinput
+
+    startCommand: gunicorn cyberattack.wsgi:application --bind 0.0.0.0:$PORT
+
     envVars:
       - key: DJANGO_SETTINGS_MODULE
-        value: cybersecurity.settings_production
+        value: cyberattack.settings_production
+      
+      - key: PYTHON_VERSION
+        value: 3.10.13
+
       - key: SECRET_KEY
         generateValue: true
+
       - key: EMAIL_HOST_USER
         value: obernard377@gmail.com
+
       - key: EMAIL_HOST_PASSWORD
-        sync: false  # Set this manually in Render dashboard
+        sync: false  # Add manually in Render Dashboard
+
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cyberguard-db
+          property: connectionString
 
 databases:
   - name: cyberguard-db
